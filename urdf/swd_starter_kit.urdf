@@ -4,24 +4,45 @@
      connected ot a visual object, however, the parts are drawn in the main mesh -->
 
 <robot name="swd_starter_kit">
+
+  <link name="base_footprint_link">
+    <visual>
+      <origin xyz="0.0 0.0 0.0" rpy="0 0 0"/>
+    </visual>
+  </link>
+  
+  <joint name="base_joint" type="fixed">
+    <origin xyz="0.0 0.0 0.1365" rpy=" 0 0 0 "/>
+    <parent link="base_footprint_link"/>
+    <child link="base_link"/>
+  </joint>
+    
   <link name="base_link">
     <visual>
-      <origin xyz="-0.46 -0.27 0.0" rpy="0 0 0" />
+      <!-- Since origin of the mesh file is corrected, the offset in the origin of the default mesh file is no longer needed -->
+      <!-- <origin xyz="-0.46 -0.27 0.0" rpy="0 0 0" /> -->
+      <origin xyz="0.0 0.0 0.0" rpy="0 0 0" />
       <geometry>
         <mesh
-            filename="package://swd_starter_kit_description/meshes/starter_kit.stl"
-            scale="0.001 0.001 0.001" />
+            filename="package://arav_visualization/assets/arav_assembly_v3_origin_corrected.stl"
+            scale="0.001 0.001 0.001" /> 
+            <!-- Mesh location replaced to enable mesh visualization on remote machine -->
+            <!-- filename="package://swd_starter_kit_description/meshes/starter_kit.stl" -->
       </geometry>
       <material name="">
         <color rgba="0.5 0.5 0.5 1" />
       </material>
     </visual>
     <collision>
-      <origin xyz="-0.46 -0.27 0.0" rpy="0 0 0" />
+      <!-- Since origin of the mesh file is corrected, the offset in the origin of the default mesh file is no longer needed -->
+      <!-- <origin xyz="-0.46 -0.27 0.0" rpy="0 0 0" /> -->
+      <origin xyz="0.0 0.0 0.0" rpy="0 0 0" />
       <geometry>
         <mesh
-            filename="package://swd_starter_kit_description/meshes/starter_kit.stl"
+            filename="package://arav_visualization/assets/arav_assembly_v3_origin_corrected.stl"
             scale="0.001 0.001 0.001"/>
+            <!-- Mesh location replaced to enable mesh visualization on remote machine -->
+            <!-- filename="package://swd_starter_kit_description/meshes/starter_kit.stl" -->
       </geometry>
     </collision>
   </link>
