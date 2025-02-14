@@ -1,0 +1,208 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- This URDF describes the SWD Starter Kit robot, the robot mesh is linked to
+     the base_link, the swd_left_link, swd_right_link, lidar_link are not
+     connected to a visual object, however, the parts are drawn in the main mesh -->
+
+<robot name="swd_starter_kit">
+
+  <link name="base_footprint_link">
+    <visual>
+      <origin xyz="0.0 0.0 0.0" rpy="0 0 0"/>
+    </visual>
+  </link>
+  
+
+  <joint name="base_joint" type="fixed">
+    <origin xyz="0.0 0.0 0.1365" rpy=" 0 0 0 "/>
+    <parent link="base_footprint_link"/>
+    <child link="base_link"/>
+  </joint>
+    
+
+  <link name="base_link">
+    <visual>
+      <!-- Since origin of the mesh file is corrected, the offset in the origin of the default mesh file is no longer needed -->
+      <!-- <origin xyz="-0.46 -0.27 0.0" rpy="0 0 0" /> -->
+      <origin xyz="0.0 0.0 0.0" rpy="0 0 0" />
+      <geometry>
+        <mesh
+            filename="package://arav_visualization/assets/arav_robot_base.stl"
+            scale="0.001 0.001 0.001" /> 
+            <!-- Mesh location replaced to enable mesh visualization on remote machine -->
+            <!-- filename="package://swd_starter_kit_description/meshes/starter_kit.stl" -->
+      </geometry>
+      <material name="">
+        <color rgba="0.5 0.5 0.5 1" />
+      </material>
+    </visual>
+    <collision>
+      <!-- Since origin of the mesh file is corrected, the offset in the origin of the default mesh file is no longer needed -->
+      <!-- <origin xyz="-0.46 -0.27 0.0" rpy="0 0 0" /> -->
+      <origin xyz="0.0 0.0 0.0" rpy="0 0 0" />
+      <geometry>
+        <mesh
+            filename="package://arav_visualization/assets/arav_robot_base.stl"
+            scale="0.001 0.001 0.001"/>
+            <!-- Mesh location replaced to enable mesh visualization on remote machine -->
+            <!-- filename="package://swd_starter_kit_description/meshes/starter_kit.stl" -->
+      </geometry>
+    </collision>
+  </link>
+
+
+  <joint name="horizontal_gimbal_base_joint" type="fixed"> <!--horizontal gimbal rotation center--> 
+    <!-- <origin xyz="-0.22825 0.0 0.141" rpy="0.0 0.0 -1.57079"/> -->
+    <origin xyz="-0.22825 -0.009 0.141" rpy="0.0 0.0 -1.57079"/>
+    <parent link="base_link"/>
+    <child link="horizontal_gimbal_base_link"/>  
+  </joint>
+
+  <link name="horizontal_gimbal_base_link">
+  <visual>
+      <origin xyz="0.0 0.0 0.0" rpy="0 0 0" />
+    </visual>
+  </link>
+
+
+  <joint name="horizontal_gimbal_joint" type="fixed"> <!--TODO: revolute-->
+    <origin xyz="0.0 0.0 0.011" rpy="0.0 0.0 0.0"/>
+    <parent link="horizontal_gimbal_base_link"/>
+    <child link="horizontal_gimbal_link"/>  
+    <axis xyz="0 0 1"/>
+    <!--CCW positive--> <!--velocity estimated (inaccurate)--> <!--effort value is arbitrary-->
+    <!--Limits set between 0 and 360 deg since this is possible before referencing the IMU, i.e: limits are not the actual gimbal limits-->
+    <!-- <limit lower="-2.443" upper="2.872" effort="100" velocity="0.6"/>  -->
+    <limit lower="0.0" upper="6.283" effort="100" velocity="0.6"/> 
+  </joint>
+
+
+  <link name="horizontal_gimbal_link">
+    <visual>
+      <origin xyz="0.0 0.0 0.0" rpy="0 0 0" />
+      <geometry>
+        <mesh
+            filename="package://arav_visualization/assets/arav_horizontal_gimbal.stl"
+            scale="0.001 0.001 0.001" /> 
+      </geometry>
+      <material name="">
+        <color rgba="0.5 0.5 0.5 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0.0 0.0 0.0" rpy="0 0 0" />
+      <geometry>
+        <mesh
+            filename="package://arav_visualization/assets/arav_horizontal_gimbal.stl"
+            scale="0.001 0.001 0.001"/>
+      </geometry>
+    </collision>
+  </link>
+
+
+  <joint name="vertical_gimbal_side_joint" type="fixed"> <!--vertical gimbal rotation center--> 
+    <origin xyz="-0.08 -0.052 0.144" rpy="0.0 0.0 0.0"/>
+    <parent link="horizontal_gimbal_base_link"/>
+    <child link="vertical_gimbal_link"/>  
+  </joint>
+
+
+  <link name="vertical_gimbal_side_link">
+  <visual>
+      <origin xyz="0.0 0.0 0.0" rpy="0 0 0" />
+    </visual>
+  </link>
+
+
+  <joint name="vertical_gimbal_joint" type="fixed"> <!--TODO: revolute--> 
+    <origin xyz="-0.08 -0.052 0.144" rpy="0.0 0.0 0.0"/>
+    <parent link="vertical_gimbal_side_link"/>
+    <child link="camera_mount_link"/>  
+    <!--CCW positive--> <!--velocity estimated (inaccurate)--> <!--effort value is arbitrary-->
+    <!--Limits taken between 0 and 65 deg (50 deg above horizontal and 20 deg below horizontal)-->
+    <limit lower="0.0" upper="1.2217" effort="100" velocity="0.6"/> 
+  </joint>
+
+
+  <link name="camera_mount_link"> <!--cameras are combined with the their mount in a single mesh file -->
+    <visual>
+      <origin xyz="0.0 0.052 0.005" rpy="0 0 0" />
+      <geometry>
+        <mesh
+            filename="package://arav_visualization/assets/arav_vertical_gimbal.stl"
+            scale="0.001 0.001 0.001" /> 
+      </geometry>
+      <material name="">
+        <color rgba="0.5 0.5 0.5 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0.0 0.0 0.0" rpy="0 0 0" />
+      <geometry>
+        <mesh
+            filename="package://arav_visualization/assets/arav_vertical_gimbal.stl"
+            scale="0.001 0.001 0.001"/>
+      </geometry>
+    </collision>
+  </link>
+
+
+  <joint name="depth_camera_back_joint" type="fixed"> 
+    <origin xyz="-0.03875 -0.052 0.0298" rpy="0.0 0.0 0.0"/>
+    <parent link="camera_mount_link"/>
+    <child link="depth_camera_back_link"/>  
+  </joint>
+
+
+  <link name="depth_camera_back_link"> <!--center of backside of camera-->
+    <visual>
+      <origin xyz="0.0 0.0 0.0" rpy="0 0 0" />
+    </visual>
+  </link>
+
+
+  <joint name="rgb_camera_back_joint" type="fixed"> 
+    <origin xyz="-0.03845 -0.052 0.0796" rpy="0.0 0.0 0.0"/>
+    <parent link="camera_mount_link"/>
+    <child link="rgb_camera_back_link"/>  
+  </joint>
+
+
+  <link name="rgb_camera_back_link"> <!--center of backside of camera-->
+    <visual>
+      <origin xyz="0.0 0.0 0.0" rpy="0 0 0" />
+    </visual>
+  </link>
+
+
+  <link name="swd_left_link"></link>
+
+
+  <joint name="base_swd_left_link" type="fixed">
+    <origin xyz="0. 0.2483 -0.074" rpy="0 0 0" />
+    <parent link="base_link" />
+    <child link="swd_left_link" />
+    <axis xyz="0 0 0" />
+  </joint>
+
+
+  <link name="swd_right_link"></link>
+
+
+  <joint name="base_swd_right_link" type="fixed">
+    <origin xyz="0 -0.2483 -0.074" rpy="0 0 0" />
+    <parent link="base_link" />
+    <child link="swd_right_link" />
+    <axis xyz="0 0 0" />
+  </joint>
+
+
+  <link name="lidar_link"></link>
+
+
+  <joint name="base_lidar_link" type="fixed">
+    <origin xyz="0.044 0 -0.0269" rpy="0 0 0" />
+    <parent link="base_link" />
+    <child link="lidar_link" />
+    <axis xyz="0 0 0" />
+  </joint>
+</robot>
